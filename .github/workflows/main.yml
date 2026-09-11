@@ -29,8 +29,14 @@ jobs:
         with:
           gradle-version: '9.3.1'
 
+      - name: Extract RCOS 3.0 project
+        run: |
+          rm -rf extracted
+          mkdir extracted
+          unzip -q RCOS-3.0-Build-Ready.zip -d extracted
+
       - name: Build RCOS 3.0 APK
-        working-directory: android/rcos-mobile-fixed
+        working-directory: extracted/rcos-mobile-fixed
         run: |
           gradle --no-daemon :app:assembleDebug
 
@@ -38,5 +44,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: RCOS-3.0-Debug-APK
-          path: android/rcos-mobile-fixed/app/build/outputs/apk/debug/*.apk
+          path: extracted/rcos-mobile-fixed/app/build/outputs/apk/debug/*.apk
           if-no-files-found: error
